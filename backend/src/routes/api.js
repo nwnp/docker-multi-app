@@ -4,8 +4,10 @@ const List = require("../models/lists");
 
 router.post("/values", async (req, res, next) => {
   try {
-    const value = await List.create(req.body.value);
-    return res.status(200).json({ success: true, value });
+    const value = await List.create({ value: req.body.value });
+    return res
+      .status(200)
+      .json({ success: true, value: value.dataValues.value });
   } catch (error) {
     return res.status(400).json({ success: false });
   }
@@ -14,7 +16,6 @@ router.post("/values", async (req, res, next) => {
 router.get("/value", async (req, res, next) => {
   try {
     const lists = await List.findAll({});
-    console.log(lists);
     return res.status(200).json({ success: true, lists });
   } catch (error) {
     return res.status(400).json({ success: false, error });

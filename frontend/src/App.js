@@ -10,8 +10,7 @@ function App() {
   useEffect(() => {
     // useEffect가 db에 있는 값을 가져옴
     axios.get(`http://localhost:8080/api/value`).then((response) => {
-      console.log("response", response.data);
-      setLists(response.data);
+      setLists(response.data.lists);
     });
   }, []);
 
@@ -25,8 +24,9 @@ function App() {
       .post(`http://localhost:8080/api/values`, { value: value })
       .then((response) => {
         if (response.data.success) {
-          setLists([...lists, response.data]);
+          setLists([...lists, response.data.value]);
           setValue("");
+          window.location.reload();
         } else {
           alert("값을 DB에 저장하는데 실패했습니다.");
         }
@@ -38,8 +38,8 @@ function App() {
       <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <div className="container">
-          {lists.data &&
-            lists.data.map((list, index) => <li key={index}>{list.value}</li>)}
+          {lists &&
+            lists.map((list, index) => <li key={index}>{list.value}</li>)}
           <form className="example" onSubmit={submitHandler}>
             <input
               type="text"
