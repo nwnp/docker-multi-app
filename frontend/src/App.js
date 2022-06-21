@@ -9,7 +9,7 @@ function App() {
 
   useEffect(() => {
     // useEffect가 db에 있는 값을 가져옴
-    axios.get(`/api/values`).then((response) => {
+    axios.get(`http://localhost:8080/api/values`).then((response) => {
       console.log("response", response);
       setLists(response);
     });
@@ -21,15 +21,17 @@ function App() {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    axios.post(`/api/values`, { value: value }).then((response) => {
-      if (response.data.success) {
-        console.log(response);
-        lists([...lists, response.data]);
-        setValue("");
-      } else {
-        alert("값을 DB에 저장하는데 실패했습니다.");
-      }
-    });
+    axios
+      .post(`http://localhost:8080/api/values`, { value: value })
+      .then((response) => {
+        if (response.data.success) {
+          console.log(response);
+          setLists([...lists, response.data]);
+          setValue("");
+        } else {
+          alert("값을 DB에 저장하는데 실패했습니다.");
+        }
+      });
   };
 
   return (
@@ -38,7 +40,7 @@ function App() {
         <img src={logo} className="App-logo" alt="logo" />
         <div className="container">
           {lists &&
-            lists.map((list, index) => <li key={index}>{lists.value}</li>)}
+            lists.map((list, index) => <li key={index}>{list.value}</li>)}
           <form className="example" onSubmit={submitHandler}>
             <input
               type="text"
