@@ -1,24 +1,24 @@
 const express = require("express");
-const db = require("../models/db");
 const router = express.Router();
+const List = require("../models/lists");
 
-router.get("/values", (req, res, next) => {
-  db.pool.query("SELECT * FROM lists;", (err, results, fileds) => {
-    if (err) {
-      console.log(err);
-      return res.status(500).json({ success: false, error: err });
-    } else return res.json(results);
-  });
+router.post("/values", async (req, res, next) => {
+  try {
+    const value = await List.create(req.body.value);
+    return res.status(200).json({ success: true, value });
+  } catch (error) {
+    return res.status(400).json({ success: false });
+  }
 });
 
-router.post("/values", (req, res, next) => {
-  db.pool.query(
-    `INSERT INTO lists (values) VALUES("${req.body.value}")`,
-    (err, results, fields) => {
-      if (err) return res.status(500).send(err);
-      else return res.json({ success: true, value: req.body.value });
-    }
-  );
+router.get("/value", async (req, res, next) => {
+  try {
+    const lists = await List.findAll({});
+    console.log(lists);
+    return res.status(200).json({ success: true, lists });
+  } catch (error) {
+    return res.status(400).json({ success: false, error });
+  }
 });
 
 module.exports = router;
