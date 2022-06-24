@@ -9,8 +9,8 @@ function App() {
 
   useEffect(() => {
     // useEffect가 db에 있는 값을 가져옴
-    axios.get(`http://localhost:8080/api/value`).then((response) => {
-      setLists(response.data.lists);
+    axios.get(`/api/values`).then((response) => {
+      setLists(response.data);
     });
   }, []);
 
@@ -20,17 +20,15 @@ function App() {
 
   const submitHandler = (event) => {
     event.preventDefault();
-    axios
-      .post(`http://localhost:8080/api/values`, { value: value })
-      .then((response) => {
-        if (response.data.success) {
-          setLists([...lists, response.data.value]);
-          setValue("");
-          window.location.reload();
-        } else {
-          alert("값을 DB에 저장하는데 실패했습니다.");
-        }
-      });
+    axios.post(`/api/value`, { value: value }).then((response) => {
+      if (response.data.success) {
+        setLists([...lists, response.data]);
+        setValue("");
+        window.location.reload();
+      } else {
+        alert("값을 DB에 저장하는데 실패했습니다.");
+      }
+    });
   };
 
   return (

@@ -1,4 +1,4 @@
-FROM node:16 as builder
+FROM node:alpine as builder
 WORKDIR /app
 COPY ./package.json ./
 RUN npm install
@@ -7,5 +7,5 @@ CMD [ "npm", "run", "build" ]
 
 FROM nginx
 EXPOSE 3000
-COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf:2
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
 COPY --from=builder /app/build /usr/share/nginx/html
